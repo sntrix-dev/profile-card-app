@@ -8,7 +8,7 @@ interface ShareProps {
 const Share: FC<ShareProps> = ({ renderShareBtn }) => {
   const handleSharing = async () => {
     if (window) {
-      const shareDetails = { url: document.location.host + "/shareCard/" };
+      const shareDetails = { url: "/shareCard" };
       console.log(document.location.host + "/shareCard");
 
       await navigator
