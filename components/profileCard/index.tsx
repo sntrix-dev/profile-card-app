@@ -51,7 +51,11 @@ const ProfileCard: FC<ProfileCardProps> = ({
           )}
         />
       )}
-      <div className="relative z-[1] flex flex-col items-center gap-2 py-16 px-4 justify-between h-full my-auto">
+      <div
+        className={`relative z-[1] flex flex-col items-center gap-2  px-4 justify-between h-full my-auto ${
+          isCard ? "py-4" : isPage ? "py-16" : "py-10"
+        }`}
+      >
         <div className="p-0.5 bg-[#147BFF] w-max rounded-full mb-2 relative">
           <Image
             src={dpURL}
