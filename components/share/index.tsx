@@ -3,12 +3,13 @@ import { FC, ReactNode } from "react";
 
 interface ShareProps {
   renderShareBtn: (onClick: () => void) => ReactNode;
+  shareCard?: boolean;
 }
 
-const Share: FC<ShareProps> = ({ renderShareBtn }) => {
+const Share: FC<ShareProps> = ({ renderShareBtn, shareCard = false }) => {
   const handleSharing = async () => {
     if (window) {
-      const shareDetails = { url: "/shareCard" };
+      const shareDetails = { url: shareCard ? "/shareCard" : "/" };
       console.log(document.location.host + "/shareCard");
 
       await navigator

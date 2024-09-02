@@ -1,4 +1,5 @@
 import { FC, HTMLAttributes } from "react";
+import { CloseIcon } from "../Icons";
 
 interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   open: boolean;
@@ -15,6 +16,14 @@ const Modal: FC<ModalProps> = ({ onClose, open, children }) => {
           : "opacity-0 pointer-events-none"
       }`}
     >
+      {open && (
+        <button
+          className="text-white absolute top-2 right-2 p-1 rounded-full z-20 bg-[#636366]"
+          onClick={onClose}
+        >
+          <CloseIcon />
+        </button>
+      )}
       {open && <div onClick={(e) => e.stopPropagation()}>{children}</div>}
     </div>
   );

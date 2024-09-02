@@ -11,21 +11,33 @@ import Comments from "@/components/comments";
 import Modal from "@/components/modal";
 import ProfileCard from "@/components/profileCard";
 import Share from "@/components/share";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 const raleway = Raleway({ subsets: ["latin"] });
-
+type Data = { cardImageURL: string; profileTitle: string; description: string };
 interface HomeProps {
   data: { [key: string]: any };
+  metaData: Data;
 }
 
-const Home: NextPage<HomeProps> = ({ data }) => {
+const Home: NextPage<HomeProps> = ({ data, metaData }) => {
   const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
 
   console.log(data);
 
   return (
     <>
+      {metaData && (
+        <Head>
+          <title>{metaData.profileTitle}</title>
+          <meta name="description" content={metaData.description} />
+          <meta property="og:image" content={metaData.cardImageURL} />
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="300px" />
+          <meta property="og:image:height" content="300px" />
+        </Head>
+      )}
       <main
         style={{
           ...raleway.style,
@@ -44,6 +56,7 @@ const Home: NextPage<HomeProps> = ({ data }) => {
             lastname={data.lastname}
             title={data.title[0].value}
             onProfileCardClick={() => setIsProfileCardOpen(true)}
+            profileBannerImageURL={data.profileDesignInfo.profileBannerImageURL}
           />
           <div className="w-full bg-white/20 shadow flex flex-col items-center p-4 gap-1 rounded-2xl justify-center text-white relative z-[1]">
             <Share
@@ -70,7 +83,6 @@ const Home: NextPage<HomeProps> = ({ data }) => {
             lastname={data.lastname}
             title={data.title[0].value}
             profileBannerImageURL={data.profileDesignInfo.profileBannerImageURL}
-            onClose={() => setIsProfileCardOpen(false)}
           />
         </Modal>
       </main>
@@ -80,19 +92,25 @@ const Home: NextPage<HomeProps> = ({ data }) => {
 
 export const getServerSideProps = async () => {
   let data = null;
+  let metaData = null;
 
   try {
+    const profilesMetaData = await axios.post(
+      "https://dev.elred.io/noSessionPreviewCardScreenshot?userCode=66961e8dcc9a8155d09b8c9b"
+    );
     const profilesData = await axios.post(
       "https://dev.elred.io/noSessionProfileDetails?userCode=66961e8dcc9a8155d09b8c9b"
     );
     data = profilesData.data?.result[0] ?? null;
+    metaData = profilesMetaData.data?.result[0] ?? null;
   } catch (error) {
     console.log("error", error);
   }
 
   return {
     props: {
-      data: data,
+      data,
+      metaData,
     },
   };
 };
